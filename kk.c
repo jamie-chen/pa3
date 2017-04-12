@@ -20,8 +20,67 @@ Description: Karmarkar-Karp algorithm...
 void MergeSort(long long arr[], int l, int r); 
 void merge(long long arr[], int l, int m, int r); 
 void print_array(long long* arr, int size);
+long long kk (long long* A); 
 
 
+
+int main (int argc, char *argv[]) {
+
+	// read from input file in command line 
+    char inputfile[0x100]; 
+    int f = atoi(argv[1]); 
+    snprintf(inputfile, sizeof(inputfile), "%d.txt", f);
+
+    // read the integers line by line
+    long long* A = malloc(sizeof(long long)*STD_ARRAY_SIZE);
+    char* str = malloc(sizeof(char) * 12);
+    int counter = 0;
+
+
+    FILE* fp;
+    fp = fopen(inputfile, "r");
+
+    // read into array 
+    for (int i =0; i < STD_ARRAY_SIZE; i++) {
+        // printf("HELLO"); 
+        // exit(0);
+        fgets(str, 11, fp);
+        A[i] = atoll(str);
+    }
+
+    // print for testing purposes 
+    print_array(A, STD_ARRAY_SIZE);
+
+    // run KK algorithm 
+	long long residue = kk(A);
+
+	printf("The residue after Karmarkar-Karp algorithm is: %lld\n", residue);
+
+
+	// now make a temporary kk_residue file
+	char* outputfile = malloc(sizeof(char)*STD_FILENAME_SIZE);
+	sprintf(outputfile, "kk_residue.txt");
+
+	// print residue to file "kk_residue" to check later 
+	FILE* wfp;
+	wfp = fopen(outputfile, "w");
+
+	char* final = malloc(sizeof(char) * 12); 
+	sprintf(final, "%lld", residue); 
+	fputs(final, wfp);
+	
+	fclose(fp); 
+	fclose(wfp);
+
+	free(outputfile);
+    free(str); 
+    free(final);
+	free(A);
+
+}
+
+
+// helper funciton for Karmarkar-Karp algorithm 
 long long kk (long long* A) {
 	int elt_remaining = STD_ARRAY_SIZE; 
 	int res = 0; 
@@ -50,55 +109,6 @@ long long kk (long long* A) {
 	return res; 
 }
 
-
-
-int main (int argc, char *argv[]) {
-
-    char inputfile[0x100]; 
-    int f = atoi(argv[1]); 
-    snprintf(inputfile, sizeof(inputfile), "%d.txt", f);
-
-    // read the integers line by line
-    long long* A = malloc(sizeof(long long)*STD_ARRAY_SIZE);
-    char* str = malloc(sizeof(char) * 12);
-    int counter = 0;
-
-    FILE* fp;
-    fp = fopen(inputfile, "r");
-
-    for (int i =0; i < STD_ARRAY_SIZE; i++) {
-        // printf("HELLO"); 
-        // exit(0);
-        fgets(str, 11, fp);
-        A[i] = atoll(str);
-    }
-    print_array(A, STD_ARRAY_SIZE);
-
-	long long residue = kk(A);
-
-	printf("The residue after Karmarkar-Karp algorithm is: %lld\n", residue);
-
-
-	// now make a temporary kk_residue file
-	char* outputfile = malloc(sizeof(char)*STD_FILENAME_SIZE);
-	sprintf(outputfile, "kk_residue.txt");
-
-	FILE* wfp;
-	wfp = fopen(outputfile, "w");
-
-	char* final = malloc(sizeof(char) * 12); 
-	sprintf(final, "%lld", residue); 
-	fputs(final, wfp);
-	
-	fclose(fp); 
-	fclose(wfp);
-
-	free(outputfile);
-    free(str); 
-    free(final);
-	free(A);
-
-}
 
 // helper function for mergesort 
 void merge(long long arr[], int l, int m, int r)
@@ -155,8 +165,8 @@ void merge(long long arr[], int l, int m, int r)
 
 }
  
-/* l is for left index and r is right index of the
-   sub-array of arr to be sorted */
+// l is for left index and r is right index of the
+// sub-array of arr to be sorted
 void MergeSort(long long arr[], int l, int r)
 {
     if (l < r)
@@ -173,6 +183,7 @@ void MergeSort(long long arr[], int l, int r)
     }
 }
 
+// print array helper function (for testing purposes)
 void print_array(long long* arr, int size) {
 	printf("ARRAY: [");
 	for (int i =0; i < size; i++ ) {

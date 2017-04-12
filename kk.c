@@ -14,7 +14,7 @@ Description: Karmarkar-Karp algorithm...
 #include <time.h>
 
 #define STD_FILENAME_SIZE 16
-#define STD_ARRAY_SIZE 4
+#define STD_ARRAY_SIZE 100
 
 
 void MergeSort(long long arr[], int l, int r); 

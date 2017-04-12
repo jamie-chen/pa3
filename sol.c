@@ -3,12 +3,18 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define STD_ARRAY_SIZE 100
+#define lim 100
+
 long long rand_num(void); 
 
-int main(void) {
+int main(int argc, char** argv) {
 	srand((unsigned) time(NULL));
+	int n = atoi(argv[1]); 
 
-	for (int j = 0; j < 100; j++) {
+	for (int j = 0; j < n; j++) {
+
+		// number of 100-int files to print
 
 		char filename[0x100]; 
 		snprintf(filename, sizeof(filename), "%d.txt", j+1);
@@ -18,7 +24,7 @@ int main(void) {
 		// long long sum = 0; 
 
 
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < STD_ARRAY_SIZE; i++) {
 			long long rand = rand_num(); 
 			fprintf(fp, "%lld\n", rand); 
 			// sum+=rand; 
@@ -41,7 +47,7 @@ long long rand_num(void) {
 	// divide the two to make everything between 0 and 1
 	float factor = (float) (rand_1/max_rand);
 
-	long long rand = 1000000000000 * factor + 1; 
+	long long rand = lim * factor + 1; 
 	return rand; 
 
 }

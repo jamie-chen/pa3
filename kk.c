@@ -14,65 +14,173 @@ Description: Karmarkar-Karp algorithm...
 #include <time.h>
 
 #define STD_FILENAME_SIZE 16
-#define STD_ARRAY_SIZE 100
+#define STD_ARRAY_SIZE 4
 
 
+void MergeSort(long long arr[], int l, int r); 
+void merge(long long arr[], int l, int m, int r); 
+void print_array(long long* arr, int size);
 
 
-int* kk (int* A_sorted) {
+long long kk (long long* A) {
+	int elt_remaining = STD_ARRAY_SIZE; 
+	int res = 0; 
 
-	// implementation of kk here...
+	// keep track of max indices in the sorted array 
+	int max = STD_ARRAY_SIZE - 1; 
+	int max_2 = STD_ARRAY_SIZE - 2;
+	
 
-}
+	while (elt_remaining > 0) {
 
+		MergeSort(A, 0, max); 
+		int temp = A[max] - A[max_2];
+		A[max] = temp; 
+		A[max_2] = 0; 
+		elt_remaining--; 
+	}
 
+	// find residue (non zero element)
+	for (int i =0; i < STD_ARRAY_SIZE; i++) {
+		if (A[i] != 0) {
+			res = A[i]; 
+		}
+	}
 
-int* mergesort (int* A, ... mergesort stuff here ...) {
-
-	// implementation of mergesort here...
-
+	return res; 
 }
 
 
 
 int main (int argc, char *argv[]) {
 
-	// parse the command line arguments
-	char* inputfile = malloc(sizeof(char)*STD_FILENAME_SIZE);
-	inputfile = argv[1];
+    char inputfile[0x100]; 
+    int f = atoi(argv[1]); 
+    snprintf(inputfile, sizeof(inputfile), "%d.txt", f);
 
+    // read the integers line by line
+    long long* A = malloc(sizeof(long long)*STD_ARRAY_SIZE);
+    char* str = malloc(sizeof(char) * 12);
+    int counter = 0;
 
-	// read the integers line by line
-	long long* A = malloc(sizeof(long long)*STD_ARRAY_SIZE);
-	long long temp_number = 0;
-	int counter = 0;
+    FILE* fp;
+    fp = fopen(inputfile, "r");
 
-	FILE* fp;
-	fp = fopen(inputfile, "r");
+    for (int i =0; i < STD_ARRAY_SIZE; i++) {
+        // printf("HELLO"); 
+        // exit(0);
+        fgets(str, 11, fp);
+        A[i] = atoll(str);
+    }
+    print_array(A, STD_ARRAY_SIZE);
 
-	while (fgets(temp_number, sizeof(long long), fp)) {
-		A[counter] = temp_number;
-		counter++;
-	}
+	long long residue = kk(A);
 
-	long long* A_sorted = mergesort(A, ... other arguments here ...);
-
-	long long residue = kk(A_sorted);
-
-	printf("The residue after Karmarkar-Karp algorithm is: %d\n", residue);
-
-
+	printf("The residue after Karmarkar-Karp algorithm is: %lld\n", residue);
 
 
 	// now make a temporary kk_residue file
 	char* outputfile = malloc(sizeof(char)*STD_FILENAME_SIZE);
-	sprintf(outputfile, "kk_residue");
+	sprintf(outputfile, "kk_residue.txt");
 
 	FILE* wfp;
 	wfp = fopen(outputfile, "w");
 
-	fputs(residue, sizeof(long long), wfp);
+	char* final = malloc(sizeof(char) * 12); 
+	sprintf(final, "%lld", residue); 
+	fputs(final, wfp);
+	
+	fclose(fp); 
+	fclose(wfp);
+
+	free(outputfile);
+    free(str); 
+    free(final);
+	free(A);
+
 }
+
+// helper function for mergesort 
+void merge(long long arr[], int l, int m, int r)
+{
+    int i, j, k;
+    int n1 = m - l + 1;
+    int n2 =  r - m;
+ 
+    /* create temp arrays */
+    int L[n1], R[n2];
+ 
+    /* Copy data to temp arrays L[] and R[] */
+    for (i = 0; i < n1; i++)
+        L[i] = arr[l + i];
+    for (j = 0; j < n2; j++)
+        R[j] = arr[m + 1+ j];
+ 
+    /* Merge the temp arrays back into arr[l..r]*/
+    i = 0; // Initial index of first subarray
+    j = 0; // Initial index of second subarray
+    k = l; // Initial index of merged subarray
+    while (i < n1 && j < n2)
+    {
+        if (L[i] <= R[j])
+        {
+            arr[k] = L[i];
+            i++;
+        }
+        else
+        {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+ 
+    /* Copy the remaining elements of L[], if there
+       are any */
+    while (i < n1)
+    {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+ 
+    /* Copy the remaining elements of R[], if there
+       are any */
+    while (j < n2)
+    {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+
+}
+ 
+/* l is for left index and r is right index of the
+   sub-array of arr to be sorted */
+void MergeSort(long long arr[], int l, int r)
+{
+    if (l < r)
+    {
+        // Same as (l+r)/2, but avoids overflow for
+        // large l and h
+        int m = l+(r-l)/2;
+ 
+        // Sort first and second halves
+        MergeSort(arr, l, m);
+        MergeSort(arr, m+1, r);
+ 
+        merge(arr, l, m, r);
+    }
+}
+
+void print_array(long long* arr, int size) {
+	printf("ARRAY: [");
+	for (int i =0; i < size; i++ ) {
+		printf("%lld, ", arr[i]); 
+	}
+	printf("]\n"); 
+}
+
 
 
 

@@ -38,7 +38,7 @@ void rand_move(int* S) {
 
 
 // generates random number in [1, lim] 
-long long rand_num(int lim) {
+long long rand_num (int lim) {
 	// generate random double, seeded with time for true randomness
 	double rand_1 = (double) rand();
 	// calculate the max value rand can return

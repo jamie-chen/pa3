@@ -29,7 +29,7 @@ int main (int argc, char *argv[]) {
 	// read from input file in command line 
     char inputfile[0x100]; 
     int f = atoi(argv[1]); 
-    snprintf(inputfile, sizeof(inputfile), "%d.txt", f);
+    sprintf(inputfile, "100_random_instances/%d.txt", f);
 
     // read the integers line by line
     long long* A = malloc(sizeof(long long)*STD_ARRAY_SIZE);
@@ -49,12 +49,13 @@ int main (int argc, char *argv[]) {
     }
 
     // print for testing purposes 
-    print_array(A, STD_ARRAY_SIZE);
+    //print_array(A, STD_ARRAY_SIZE);
 
     // run KK algorithm 
 	long long residue = kk(A);
 
 	printf("The residue after Karmarkar-Karp algorithm is: %lld\n", residue);
+
 
 
 	// now make a temporary kk_residue file

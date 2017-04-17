@@ -13,8 +13,10 @@ Description: Main controller program
 #include <math.h>
 #include <time.h>
 
-#define STD_ARRAY_SIZE 16
+#define STD_COMMAND_SIZE 16
+#define STD_FILENAME_SIZE 8
 #define NUM_INSTANCES 100
+#define STD_NUM_BUFFER_SIZE 16
 
 
 
@@ -23,30 +25,32 @@ Description: Main controller program
 int main () {
 
 	// make 100 files of 100 integers
-	system("./sol");
+	char* sol_command = malloc(sizeof(char)*STD_COMMAND_SIZE);
+	sprintf(sol_command, "./sol %d", NUM_INSTANCES);
+	system(sol_command);
 
 
 	// run Karmarkar-Karp, Hill Climbing, Repeated Random, and Simulated Annealing algorithms a hundred times
 	for (int i=0; i<NUM_INSTANCES; i++) {
 
-		char* command = malloc(sizeof(char)*STD_ARRAY_SIZE);
-		sprintf(command, "./kk %d.txt", i);
+		char* kk_command = malloc(sizeof(char)*STD_COMMAND_SIZE);
+		sprintf(kk_command, "./kk %d", i+1);
 
-
+		// run the Karmarkar-Karp algorithm
+		system(kk_command);
 
 
 		// read in kk_residue
 		char* inputfile = malloc(sizeof(char)*STD_FILENAME_SIZE);
-		int temp_number = 0;
+		sprintf(inputfile, "kk_residue.txt");
+		char* temp_number = malloc(sizeof(char)*STD_NUM_BUFFER_SIZE);
 
 		FILE* fp;
 		fp = fopen(inputfile, "r");
 
 		fgets(temp_number, sizeof(long long), fp);
 
-		int kk_residue = temp_number;
-
-
+		int kk_residue = atoll(temp_number);
 
 
 		// now run the 3 algorithms
@@ -60,8 +64,10 @@ int main () {
 		sprintf(sa_command, "./hc %d %d", i, kk_residue);
 
 		system(hc_command);
+		printf("finished round %d\n", i);
 		system(rr_command);
 		system(sa_command);
+		printf("finished round %d\n", i);
 	}
 }
 

@@ -12,6 +12,7 @@ Description: Repeated Random algorithm...
 #include <stdint.h>
 #include <math.h>
 #include <time.h>
+#include "main.h"
 
 #define STD_FILENAME_SIZE 16
 #define STD_ARRAY_SIZE 100

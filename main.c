@@ -12,13 +12,12 @@ Description: Main controller program
 #include <stdint.h>
 #include <math.h>
 #include <time.h>
+#include "main.h"
 
 #define STD_COMMAND_SIZE 16
 #define STD_FILENAME_SIZE 8
 #define NUM_INSTANCES 100
 #define STD_NUM_BUFFER_SIZE 16
-
-
 
 
 

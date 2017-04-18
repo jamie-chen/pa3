@@ -12,16 +12,13 @@ Description: Hill Climbing algorithm...
 #include <stdint.h>
 #include <math.h>
 #include <time.h>
+#include "main.h"
 
 #define STD_FILENAME_SIZE 16
 #define STD_ARRAY_SIZE 100
 #define MAX_RANDOM_NUMBER 100
 #define MAX_ITER 25000
 #define STD_NUM_BUFFER_SIZE 16
-
-
-
-
 
 
 
@@ -46,10 +43,6 @@ long long rand_num (int lim) {
 	long long rand = lim * factor + 1; 
 	return rand; 
 }
-
-
-
-
 
 
 

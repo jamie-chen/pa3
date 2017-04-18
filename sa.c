@@ -13,15 +13,13 @@ Description: Simulated Annealing algorithm...
 #include <stdint.h>
 #include <math.h>
 #include <time.h>
+#include "main.h"
 
 #define STD_FILENAME_SIZE 16
 #define STD_ARRAY_SIZE 100
 #define MAX_RANDOM_NUMBER 100
 #define MAX_ITER 25000
 #define STD_NUM_BUFFER_SIZE 16
-
-
-
 
 
 
@@ -58,10 +56,6 @@ double rand_num_double () {
 
 	return factor;
 }
-
-
-
-
 
 
 
@@ -172,6 +166,19 @@ long long sa_standard (long long* A) {
 
 
 long long sa_prepartition (long long* A) {
+	long long* A_p = malloc(sizeof(long long)*STD_ARRAY_SIZE);
+	prepartition(A, A_p); 
+
+	for (int i=0; i<MAX_ITER; i++) {
+		// S_prime: random neighbor of S 
+		long long* S_prime = malloc(sizeof(long long)*STD_ARRAY_SIZE);
+		for (int j=0; j<STD_ARRAY_SIZE; j++) {
+			S_prime[j] = S[j];
+		}
+		pp_randmove(S_prime);
+
+		long long s_residue = kk(S); 
+		long long sp_residue = kk(S_prime); 
 
 }
 

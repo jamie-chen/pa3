@@ -26,8 +26,8 @@ Description: Hill Climbing algorithm...
 
 
 // Calculates the residue for a given solution to a given array
-int residue_calculator (int* A, int* S) {
-	int residue = 0;
+long long residue_calculator (long long* A, long long* S) {
+	long long residue = 0;
 	for (int i=0; i<STD_ARRAY_SIZE; i++) {
 		residue += (A[i] * S[i]);
 	}
@@ -54,7 +54,7 @@ long long rand_num (int lim) {
 
 
 // Generates a randoms solution, comprised of -1's and 1's
-void generate_random_solution (int* S) {
+void generate_random_solution (long long* S) {
 	for (int i=0; i<STD_ARRAY_SIZE; i++) {
 
 		long long random_number = rand_num(100);
@@ -68,11 +68,11 @@ void generate_random_solution (int* S) {
 }
 
 // move the solution array to a neighbor, by performing one random move
-void rand_move (int* S) {
+void rand_move (long long* S) {
 
-	int i = rand_num(100);
-	int j = rand_num(100);
-	int k = rand_num(100);
+	long long i = rand_num(100);
+	long long j = rand_num(100);
+	long long k = rand_num(100);
 
 	// make sure i and j are not equal to one another
 	while (i == j) {
@@ -89,15 +89,15 @@ void rand_move (int* S) {
 }
 
 
-int hc_standard (int* A) {
+long long hc_standard (long long* A) {
 
 	// make a random solution first
-	int* S = malloc(sizeof(int)*STD_ARRAY_SIZE);
+	long long* S = malloc(sizeof(long long)*STD_ARRAY_SIZE);
 	generate_random_solution(S);
 
 	// then iterate MAX_ITER times while doing a random move then update if residue is smaller
 	for (int i=0; i<MAX_ITER; i++) {
-		int* S_prime = malloc(sizeof(int)*STD_ARRAY_SIZE);
+		long long* S_prime = malloc(sizeof(long long)*STD_ARRAY_SIZE);
 		for (int j=0; j<STD_ARRAY_SIZE; j++) {
 			S_prime[j] = S[j];
 		}
@@ -105,15 +105,22 @@ int hc_standard (int* A) {
 		rand_move(S_prime);
 
 		// set S_prime to S if its residue is smaller
-		int S_residue = residue_calculator(A, S);
-		int S_prime_residue = residue_calculator(A, S_prime);
+		int S_residue = llabs(residue_calculator(A, S));
+		int S_prime_residue = llabs(residue_calculator(A, S_prime));
 
 		if (S_prime_residue < S_residue) {
-			S = S_prime;
+			for (int j=0; j<STD_ARRAY_SIZE; j++) {
+				S[j] = S_prime[j];
+			}
 		}
+
+		free(S_prime);
 	}
 
-	int final_S_residue = residue_calculator(A, S);
+	long long final_S_residue = llabs(residue_calculator(A, S));
+
+	free(S);
+
 	return final_S_residue;
 }
 
@@ -121,7 +128,7 @@ int hc_standard (int* A) {
 
 
 
-int hc_prepartition (int* A) {
+long long hc_prepartition (long long* A) {
 
 }
 
@@ -131,31 +138,37 @@ int hc_prepartition (int* A) {
 
 
 int main (int argc, char *argv[]) {
+	// randomizing seed
+	srand((unsigned) time(NULL));
 
 	// parse the command line arguments
-	char* inputfile = malloc(sizeof(char)*STD_FILENAME_SIZE);
-	inputfile = argv[1];
+	char inputfile[0x100]; 
+	sprintf(inputfile, "100_random_instances/%d.txt", atoi(argv[1]));
 	int kk_residue = atoi(argv[2]);
 
 
 	// read the integers line by line
-	int* A = malloc(sizeof(long long)*STD_ARRAY_SIZE);
+	long long* A = malloc(sizeof(long long)*STD_ARRAY_SIZE);
 	char* temp_number = malloc(sizeof(char)*STD_NUM_BUFFER_SIZE);
 	int counter = 0;
 
 	FILE* fp;
 	fp = fopen(inputfile, "r");
 
-	while (fgets(temp_number, sizeof(long long), fp)) {
+	while (fgets(temp_number, STD_NUM_BUFFER_SIZE, fp)) {
 		A[counter] = atoll(temp_number);
 		counter++;
 	}
 
-	int hc_standard_residue = hc_standard(A);
-	int hc_prepartition_residue = hc_prepartition(A);
+	long long hc_standard_residue = hc_standard(A);
+	long long hc_prepartition_residue = hc_prepartition(A);
 
-	printf("The residue after Hill Climbing in standard representation is: %d\n", hc_standard_residue);
-	printf("The residue after Hill Climbing in prepartition representation is: %d\n", hc_prepartition_residue);
+	printf("The residue after Hill Climbing in standard representation is: %lld\n", hc_standard_residue);
+	printf("The residue after Hill Climbing in prepartition representation is: %lld\n", hc_prepartition_residue);
+
+	free(temp_number);
+	free(A);
+	fclose(fp);
 }
 
 

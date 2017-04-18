@@ -25,8 +25,8 @@ Description: Repeated Random algorithm...
 
 
 // Calculates the residue for a given solution to a given array
-int residue_calculator (int* A, int* S) {
-	int residue = 0;
+long long residue_calculator (long long* A, long long* S) {
+	long long residue = 0;
 	for (int i=0; i<STD_ARRAY_SIZE; i++) {
 		residue += (A[i] * S[i]);
 	}
@@ -53,7 +53,7 @@ long long rand_num (int lim) {
 
 
 // Generates a randoms solution, comprised of -1's and 1's
-void generate_random_solution (int* S) {
+void generate_random_solution (long long* S) {
 	for (int i=0; i<STD_ARRAY_SIZE; i++) {
 
 		long long random_number = rand_num(100);
@@ -67,26 +67,36 @@ void generate_random_solution (int* S) {
 }
 
 
-int rr_standard (int* A) {
+long long rr_standard (long long* A) {
 
 	// make a random solution first
-	int* S = malloc(sizeof(int)*STD_ARRAY_SIZE);
+	long long* S = malloc(sizeof(long long)*STD_ARRAY_SIZE);
 	generate_random_solution(S);
 
 	// then iterate MAX_ITER times for random solutions
 	for (int i=0; i<MAX_ITER; i++) {
-		int* S_prime = malloc(sizeof(int)*STD_ARRAY_SIZE);
+		long long* S_prime = malloc(sizeof(long long)*STD_ARRAY_SIZE);
 		generate_random_solution(S_prime);
 
-		int S_residue = residue_calculator(A, S);
-		int S_prime_residue = residue_calculator(A, S_prime);
+		long long S_residue = llabs(residue_calculator(A, S));
+		//printf("S_residue is %lld\n", S_residue);
+		long long S_prime_residue = llabs(residue_calculator(A, S_prime));
+		//printf("S_prime_residue is %lld\n\n", S_prime_residue);
+
 
 		if (S_prime_residue < S_residue) {
-			S = S_prime;
+			for (int j=0; j<STD_ARRAY_SIZE; j++) {
+				S[j] = S_prime[j];
+			}
 		}
+		
+		free(S_prime);
 	}
 
-	int final_S_residue = residue_calculator(A, S);
+	long long final_S_residue = llabs(residue_calculator(A, S));
+
+	free(S);
+
 	return final_S_residue;
 }
 
@@ -97,7 +107,7 @@ int rr_standard (int* A) {
 
 
 
-int rr_prepartition (int* A) {
+long long rr_prepartition (long long* A) {
 
 }
 
@@ -111,10 +121,12 @@ int rr_prepartition (int* A) {
 
 
 int main (int argc, char *argv[]) {
+	// randomizing seed
+	srand((unsigned) time(NULL));
 
 	// parse the command line arguments
-	char* inputfile = malloc(sizeof(char)*STD_FILENAME_SIZE);
-	inputfile = argv[1];
+	char inputfile[0x100]; 
+	sprintf(inputfile, "100_random_instances/%d.txt", atoi(argv[1]));
 	int kk_residue = atoi(argv[2]);
 
 	// read the integers line by line
@@ -123,22 +135,22 @@ int main (int argc, char *argv[]) {
 	int counter = 0;
 
 	FILE* fp;
-	fp = fopen(inputfile, "r");
-	printf("Error Pointer1\n");
-
+	fp = fopen(inputfile, "r");	
+	
 	while (fgets(temp_number, STD_NUM_BUFFER_SIZE, fp)) {
 		A[counter] = atoll(temp_number);
 		counter++;
 	}
 
-	printf("Error Pointer3\n");
+	long long rr_standard_residue = rr_standard(A);
+	long long rr_prepartition_residue = rr_prepartition(A);
+	
+	printf("The residue after Repeated Random in standard representation is: %lld\n", rr_standard_residue);
+	printf("The residue after Repeated Random in prepartition representation is: %lld\n", rr_prepartition_residue);
 
-	int rr_standard_residue = rr_standard(A);
-	int rr_prepartition_residue = rr_prepartition(A);
-
-	printf("The residue after Repeated Random in standard representation is: %d\n", rr_standard_residue);
-	printf("The residue after Repeated Random in prepartition representation is: %d\n", rr_prepartition_residue);
-
+	free(temp_number);
+	free(A);
+	fclose(fp);
 }
 
 

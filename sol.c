@@ -5,7 +5,7 @@
 
 #define STD_ARRAY_SIZE 100
 #define STD_FILENAME_SIZE 64
-#define LIM 100
+#define LIM 1000000000000
 
 long long rand_num(void); 
 

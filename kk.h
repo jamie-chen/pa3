@@ -1,10 +1,3 @@
-/* 
-CS124 - PROGRAMMING ASSIGNMENT 3
-Authors: 30977521, 60977917
-
-Description: Karmarkar-Karp algorithm...
-...
-*/
 
 
 #include <stdio.h>
@@ -24,11 +17,10 @@ long long kk (long long* A);
 
 
 
-int main (int argc, char *argv[]) {
+long long kk_main (int f) {
 
 	// read from input file in command line 
     char inputfile[0x100]; 
-    int f = atoi(argv[1]); 
     sprintf(inputfile, "100_random_instances/%d.txt", f);
 
     // read the integers line by line
@@ -42,42 +34,18 @@ int main (int argc, char *argv[]) {
 
     // read into array 
     for (int i =0; i < STD_ARRAY_SIZE; i++) {
-        // printf("HELLO"); 
-        // exit(0);
         fgets(str, 11, fp);
         A[i] = atoll(str);
     }
 
-    // print for testing purposes 
-    //print_array(A, STD_ARRAY_SIZE);
-
     // run KK algorithm 
 	long long residue = kk(A);
-
-	printf("The residue after Karmarkar-Karp algorithm is: %lld\n", residue);
-
-
-
-	// now make a temporary kk_residue file
-	char* outputfile = malloc(sizeof(char)*STD_FILENAME_SIZE);
-	sprintf(outputfile, "kk_residue.txt");
-
-	// print residue to file "kk_residue" to check later 
-	FILE* wfp;
-	wfp = fopen(outputfile, "w");
-
-	char* final = malloc(sizeof(char) * 12); 
-	sprintf(final, "%lld", residue); 
-	fputs(final, wfp);
 	
 	fclose(fp); 
-	fclose(wfp);
-
-	free(outputfile);
     free(str); 
-    free(final);
 	free(A);
 
+    return residue;
 }
 
 

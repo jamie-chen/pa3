@@ -73,26 +73,24 @@ void rand_move(long long* S) {
 }
 
 
-void prepartition(long long* S, long long *A_p) {
+void prepartition(long long* A, long long *A_prime) {
 
 	long long P[STD_ARRAY_SIZE]; 
 
 	// initialize all A_p to 0, P to random ints between 1, 100 
 	for (int i = 0; i < STD_ARRAY_SIZE; i++) {
 		P[i] = rand_num(STD_ARRAY_SIZE); 
-		A_p[i] = 0; 
+		A_prime[i] = 0; 
 	}
 	print_array(P, STD_ARRAY_SIZE);
 
 	// prepartition
 	for (int j = 0; j < STD_ARRAY_SIZE; j++) {
-		A_p[(P[j])] = A_p[(P[j])] + S[j]; 
+		A_prime[(P[j])] = A_prime[(P[j])] + A[j]; 
 	}
+}
 
-
- }
-
- void pp_randmove(long long * S) {
+void pp_randmove(long long * S) {
  	long long i = rand_num(100); 
 	long long j = rand_num(100); 
 
@@ -102,7 +100,7 @@ void prepartition(long long* S, long long *A_p) {
 
 	S[i] = j; 
 
- }
+}
 
 // generates random number in [1, lim] 
 long long rand_num (int lim) {

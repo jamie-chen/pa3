@@ -12,13 +12,14 @@ Description: Repeated Random algorithm...
 #include <stdint.h>
 #include <math.h>
 #include <time.h>
-#include "main.h"
+#include "kk.h"
 
 #define STD_FILENAME_SIZE 16
 #define STD_ARRAY_SIZE 100
 #define MAX_RANDOM_NUMBER 100
 #define MAX_ITER 25000
 #define STD_NUM_BUFFER_SIZE 16
+#define STD_COMMAND_SIZE 16
 
 
 
@@ -46,6 +47,10 @@ long long rand_num (int lim) {
 	long long rand = lim * factor + 1; 
 	return rand; 
 }
+
+
+
+
 
 
 
@@ -108,8 +113,81 @@ long long rr_standard (long long* A) {
 
 
 
-long long rr_prepartition (long long* A) {
 
+
+
+
+
+void generate_random_solution_pp (long long* A, long long* P, long long* A_prime) {
+	for (int i=0; i<STD_ARRAY_SIZE; i++) {
+		P[i] = rand_num(STD_ARRAY_SIZE);
+		A_prime[i] = 0;
+	}
+
+	for (int i=0; i<STD_ARRAY_SIZE; i++) {
+		A_prime[(P[i])] = A_prime[(P[i])] = A[i];
+	}
+}
+
+
+
+long long run_kk (long long* A) {
+
+	// write a temporary file of the array
+	char* temp_number = malloc(sizeof(char)*STD_NUM_BUFFER_SIZE);
+	char outputfile[0x100]; 
+	sprintf(outputfile, "100_random_instances/0.txt");
+	FILE* wfp;
+	wfp = fopen(outputfile, "w");
+	for (int i=0; i<STD_ARRAY_SIZE; i++) {
+		sprintf(temp_number, "%lld\n", A[i]);
+		fputs(temp_number, wfp);
+	}
+	free(temp_number);
+	fclose(wfp);
+
+	// run the KK algorithm on the 0.txt file and return
+	long long kk_residue = kk_main(0);
+	return kk_residue;
+}
+
+
+
+
+
+long long rr_prepartition (long long* A) {
+	
+	long long* P = malloc(sizeof(long long)*STD_ARRAY_SIZE);
+	long long* A_prime = malloc(sizeof(long long)*STD_ARRAY_SIZE);
+
+	generate_random_solution_pp(A, P, A_prime);
+
+	for (int i=0; i<MAX_ITER; i++) {
+		//printf("Round %d\n", i);
+		long long* P_prime = malloc(sizeof(long long)*STD_ARRAY_SIZE);
+		long long* A_double_prime = malloc(sizeof(long long)*STD_ARRAY_SIZE);
+
+		generate_random_solution_pp(A, P_prime, A_double_prime);
+
+		long long P_residue = llabs(run_kk(A_prime));
+		long long P_prime_residue = llabs(run_kk(A_double_prime));
+
+		if (P_prime_residue < P_residue) {
+			for (int j=0; j<STD_ARRAY_SIZE; j++) {
+				P[j] = P_prime[j];
+				A_prime[j] = A_double_prime[j];
+			}
+		}
+
+		free(P_prime);
+		free(A_double_prime);
+	}
+
+	long long final_P_residue = run_kk(A_prime);
+	free(A_prime);
+	free(P);
+
+	return final_P_residue;
 }
 
 

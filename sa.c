@@ -20,6 +20,7 @@ Description: Simulated Annealing algorithm...
 #define MAX_RANDOM_NUMBER 100
 #define MAX_ITER 25000
 #define STD_NUM_BUFFER_SIZE 16
+#define STD_COMMAND_SIZE 16
 
 
 
@@ -56,6 +57,9 @@ double rand_num_double () {
 
 	return factor;
 }
+
+
+
 
 
 
@@ -98,6 +102,50 @@ double cooling_schedule (int iter) {
 	double answer = pow(10, 10) * pow(0.8, (((double)iter)/300));
 	return answer;
 }
+
+
+void prepartition(long long* S, long long *A_p) {
+
+	long long P[STD_ARRAY_SIZE]; 
+
+	// initialize all A_p to 0, P to random ints between 1, 100 
+	for (int i = 0; i < STD_ARRAY_SIZE; i++) {
+		P[i] = rand_num(STD_ARRAY_SIZE); 
+		A_p[i] = 0; 
+	}
+	print_array(P, STD_ARRAY_SIZE);
+
+	// prepartition
+	for (int j = 0; j < STD_ARRAY_SIZE; j++) {
+		A_p[(P[j])] = A_p[(P[j])] + S[j]; 
+	}
+}
+
+void pp_randmove(long long * S) {
+ 	long long i = rand_num(100); 
+	long long j = rand_num(100); 
+
+	while (j == S[i]) {
+		j = rand_num(100); 
+	}
+
+	S[i] = j; 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 long long sa_standard (long long* A) {
@@ -160,6 +208,12 @@ long long sa_standard (long long* A) {
 	long long final_S_double_prime_residue = llabs(residue_calculator(A, S_double_prime));
 	return final_S_double_prime_residue;
 }
+
+
+
+
+
+
 
 
 

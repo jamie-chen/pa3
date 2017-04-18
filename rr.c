@@ -22,10 +22,6 @@ Description: Repeated Random algorithm...
 #define STD_COMMAND_SIZE 16
 
 
-
-
-
-
 // Calculates the residue for a given solution to a given array
 long long residue_calculator (long long* A, long long* S) {
 	long long residue = 0;
@@ -47,15 +43,6 @@ long long rand_num (int lim) {
 	long long rand = lim * factor + 1; 
 	return rand; 
 }
-
-
-
-
-
-
-
-
-
 
 
 // Generates a randoms solution, comprised of -1's and 1's
@@ -108,16 +95,6 @@ long long rr_standard (long long* A) {
 
 
 
-
-
-
-
-
-
-
-
-
-
 void generate_random_solution_pp (long long* A, long long* P, long long* A_prime) {
 	for (int i=0; i<STD_ARRAY_SIZE; i++) {
 		P[i] = rand_num(STD_ARRAY_SIZE);
@@ -150,9 +127,6 @@ long long run_kk (long long* A) {
 	long long kk_residue = kk_main(0);
 	return kk_residue;
 }
-
-
-
 
 
 long long rr_prepartition (long long* A) {
@@ -192,13 +166,6 @@ long long rr_prepartition (long long* A) {
 
 
 
-
-
-
-
-
-
-
 int main (int argc, char *argv[]) {
 	// randomizing seed
 	srand((unsigned) time(NULL));
@@ -210,16 +177,27 @@ int main (int argc, char *argv[]) {
 
 	// read the integers line by line
 	long long* A = malloc(sizeof(long long)*STD_ARRAY_SIZE);
-	char* temp_number = malloc(sizeof(char)*STD_NUM_BUFFER_SIZE);
+	char* temp_number = malloc(sizeof(char)*(STD_NUM_BUFFER_SIZE+1));
 	int counter = 0;
 
 	FILE* fp;
 	fp = fopen(inputfile, "r");	
+
+
+    for (int i =0; i < STD_ARRAY_SIZE; i++) {
+        // printf("HELLO"); 
+        // exit(0);
+        fgets(temp_number, STD_NUM_BUFFER_SIZE, fp);
+        A[i] = atoll(temp_number);
+    }
 	
-	while (fgets(temp_number, STD_NUM_BUFFER_SIZE, fp)) {
-		A[counter] = atoll(temp_number);
-		counter++;
-	}
+	// while (fgets(temp_number, STD_NUM_BUFFER_SIZE, fp)) {
+
+	// 	A[counter] = atoll(temp_number);
+	// 	counter++;
+	// 	printf("HELLO");
+	// 	exit(0);
+	// }
 
 	long long rr_standard_residue = rr_standard(A);
 	long long rr_prepartition_residue = rr_prepartition(A);

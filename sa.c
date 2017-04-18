@@ -61,8 +61,6 @@ double rand_num_double () {
 
 
 
-
-
 // Generates a randoms solution, comprised of -1's and 1's
 void generate_random_solution (long long* S) {
 	for (int i=0; i<STD_ARRAY_SIZE; i++) {
@@ -260,10 +258,18 @@ int main (int argc, char *argv[]) {
 	FILE* fp;
 	fp = fopen(inputfile, "r");
 
-	while (fgets(temp_number, STD_NUM_BUFFER_SIZE, fp)) {
-		A[counter] = atoll(temp_number);
-		counter++;
-	}
+	// while (fgets(temp_number, STD_NUM_BUFFER_SIZE, fp)) {
+	// 	A[counter] = atoll(temp_number);
+	// 	counter++;
+	// }
+
+	for (int i =0; i < STD_ARRAY_SIZE; i++) {
+        // printf("HELLO"); 
+        // exit(0);
+        fgets(temp_number, STD_NUM_BUFFER_SIZE, fp);
+        A[i] = atoll(temp_number);
+    }
+	
 
 
 	long long sa_standard_residue = sa_standard(A);

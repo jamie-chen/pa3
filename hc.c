@@ -148,10 +148,18 @@ int main (int argc, char *argv[]) {
 	FILE* fp;
 	fp = fopen(inputfile, "r");
 
-	while (fgets(temp_number, STD_NUM_BUFFER_SIZE, fp)) {
-		A[counter] = atoll(temp_number);
-		counter++;
-	}
+	// while (fgets(temp_number, STD_NUM_BUFFER_SIZE, fp)) {
+	// 	A[counter] = atoll(temp_number);
+	// 	counter++;
+	// }
+	
+    for (int i =0; i < STD_ARRAY_SIZE; i++) {
+        // printf("HELLO"); 
+        // exit(0);
+        fgets(temp_number, STD_NUM_BUFFER_SIZE, fp);
+        A[i] = atoll(temp_number);
+    }
+	
 
 	long long hc_standard_residue = hc_standard(A);
 	long long hc_prepartition_residue = hc_prepartition(A);

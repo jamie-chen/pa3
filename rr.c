@@ -49,7 +49,7 @@ long long rand_num (int lim) {
 void generate_random_solution (long long* S) {
 	for (int i=0; i<STD_ARRAY_SIZE; i++) {
 
-		long long random_number = rand_num(100);
+		long long random_number = rand_num(STD_ARRAY_SIZE);
 		if (random_number < 50) {
 			S[i] = -1;
 		}
@@ -102,7 +102,7 @@ void generate_random_solution_pp (long long* A, long long* P, long long* A_prime
 	}
 
 	for (int i=0; i<STD_ARRAY_SIZE; i++) {
-		A_prime[(P[i])] = A_prime[(P[i])] = A[i];
+		A_prime[(P[i])] = A_prime[(P[i])] + A[i];
 	}
 }
 

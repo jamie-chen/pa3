@@ -13,7 +13,7 @@ Description: Simulated Annealing algorithm...
 #include <stdint.h>
 #include <math.h>
 #include <time.h>
-#include "main.h"
+#include "kk.h"
 
 #define STD_FILENAME_SIZE 16
 #define STD_ARRAY_SIZE 100
@@ -102,48 +102,6 @@ double cooling_schedule (int iter) {
 }
 
 
-void prepartition(long long* S, long long *A_p) {
-
-	long long P[STD_ARRAY_SIZE]; 
-
-	// initialize all A_p to 0, P to random ints between 1, 100 
-	for (int i = 0; i < STD_ARRAY_SIZE; i++) {
-		P[i] = rand_num(STD_ARRAY_SIZE); 
-		A_p[i] = 0; 
-	}
-	print_array(P, STD_ARRAY_SIZE);
-
-	// prepartition
-	for (int j = 0; j < STD_ARRAY_SIZE; j++) {
-		A_p[(P[j])] = A_p[(P[j])] + S[j]; 
-	}
-}
-
-void pp_randmove(long long * S) {
- 	long long i = rand_num(100); 
-	long long j = rand_num(100); 
-
-	while (j == S[i]) {
-		j = rand_num(100); 
-	}
-
-	S[i] = j; 
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 long long sa_standard (long long* A) {
@@ -216,21 +174,137 @@ long long sa_standard (long long* A) {
 
 
 
+void generate_random_solution_pp (long long* A, long long* P, long long* A_prime) {
+	for (int i=0; i<STD_ARRAY_SIZE; i++) {
+		P[i] = rand_num((STD_ARRAY_SIZE-1));
+		A_prime[i] = 0;
+	}
+
+	for (int i=0; i<STD_ARRAY_SIZE; i++) {
+		A_prime[(P[i])] = A_prime[(P[i])] + A[i];
+	}
+}
+
+
+void rand_move_pp (long long* P) {
+	long long i = rand_num(STD_ARRAY_SIZE-1);
+	long long j = rand_num(STD_ARRAY_SIZE-1);
+
+	while (P[i] == j) {
+		j = rand_num(STD_ARRAY_SIZE-1);
+	}
+
+	P[i] = j;
+}
+
+void generate_A_prime (long long* A, long long* P, long long* A_prime) {
+	for (int i=0; i<STD_ARRAY_SIZE; i++) {
+		A_prime[(P[i])] = A_prime[(P[i])] + A[i];
+	}
+}
+
+long long run_kk (long long* A) {
+
+	// write a temporary file of the array
+	char* temp_number = malloc(sizeof(char)*STD_NUM_BUFFER_SIZE);
+	char outputfile[0x100]; 
+	sprintf(outputfile, "100_random_instances/0.txt");
+	FILE* wfp;
+	wfp = fopen(outputfile, "w");
+	for (int i=0; i<STD_ARRAY_SIZE; i++) {
+		sprintf(temp_number, "%lld\n", A[i]);
+		fputs(temp_number, wfp);
+	}
+	free(temp_number);
+	fclose(wfp);
+
+	// run the KK algorithm on the 0.txt file and return
+	long long kk_residue = kk_main(0);
+	return kk_residue;
+}
+
+
+
+
+
+
+
 
 long long sa_prepartition (long long* A) {
-	long long* A_p = malloc(sizeof(long long)*STD_ARRAY_SIZE);
-	prepartition(A, A_p); 
 
+	// make a random solution first
+	long long* P = malloc(sizeof(long long)*STD_ARRAY_SIZE);
+	long long* A_prime = malloc(sizeof(long long)*STD_ARRAY_SIZE);
+
+	generate_random_solution_pp(A, P, A_prime);
+
+	// create P_double_prime and A_triple_prime, which are just the copies of P and A_prime
+	long long* P_double_prime = malloc(sizeof(long long)*STD_ARRAY_SIZE);
+	long long* A_triple_prime = malloc(sizeof(long long)*STD_ARRAY_SIZE);
+
+	for (int i=0; i<STD_ARRAY_SIZE; i++) {
+		P_double_prime[i] = P[i];
+		A_triple_prime[i] = A_prime[i];
+	}
+
+	// ???
 	for (int i=0; i<MAX_ITER; i++) {
-		// S_prime: random neighbor of S 
-		long long* S_prime = malloc(sizeof(long long)*STD_ARRAY_SIZE);
-		for (int j=0; j<STD_ARRAY_SIZE; j++) {
-			S_prime[j] = S[j];
-		}
-		pp_randmove(S_prime);
+		
+		long long* P_prime = malloc(sizeof(long long)*STD_ARRAY_SIZE);
+		long long* A_double_prime = malloc(sizeof(long long)*STD_ARRAY_SIZE);
 
-		long long s_residue = kk(S); 
-		long long sp_residue = kk(S_prime); 
+		for (int j=0; j<STD_ARRAY_SIZE; j++) {
+			P_prime[j] = P[j];
+		}
+
+		rand_move_pp(P_prime);
+		generate_A_prime(A, P_prime, A_double_prime);
+
+
+		long long P_residue = llabs(run_kk(A_prime));
+		long long P_prime_residue = llabs(run_kk(A_double_prime));
+
+		if (P_prime_residue < P_residue) {
+			for (int j=0; j<STD_ARRAY_SIZE; j++) {
+				P[j] = P_prime[j];
+				A_prime[j] = A_double_prime[j];
+			}
+		}
+
+		else {
+			double j = rand_num_double();
+			double bound = exp(-((P_prime_residue - P_residue) / (cooling_schedule(i))));
+
+			if (j < bound) {
+				for (int k=0; k<STD_ARRAY_SIZE; k++) {
+					P[k] = P_prime[k];
+					A_prime[k] = A_double_prime[k];
+				}
+			}
+		}
+
+
+		long long updated_P_residue = llabs(run_kk(A_prime));
+		long long P_double_prime_residue = llabs(run_kk(A_triple_prime));
+
+		if (updated_P_residue < P_double_prime_residue) {
+			for (int j=0; j<STD_ARRAY_SIZE; j++) {
+				P_double_prime[j] = P[j];
+				A_triple_prime[j] = A_prime[j];
+			}
+		}
+
+		free(P_prime);
+		free(A_double_prime);
+	}
+
+	long long final_P_double_prime_residue = llabs(run_kk(A_triple_prime));
+	free(A_prime);
+	free(P);
+	free(A_triple_prime);
+	free(P_double_prime);
+
+	return final_P_double_prime_residue;
 
 }
 
@@ -279,8 +353,8 @@ int main (int argc, char *argv[]) {
 	printf("The residue after Simulated Annealing in standard representation is: %lld\n", sa_standard_residue);
 	printf("The residue after Simulated Annealing in prepartition representation is: %lld\n", sa_prepartition_residue);
 
-	free(temp_number);
-	free(A);
+	//free(temp_number);
+	//free(A);
 	fclose(fp);
 }
 

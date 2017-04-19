@@ -143,8 +143,23 @@ long long rr_prepartition (long long* A) {
 
 		generate_random_solution_pp(A, P_prime, A_double_prime);
 
+		// printf("---------TRIAL %d-----------\n", i); 
+		// printf("A_double_prime: \n");
+		// // print_array(A_double_prime, STD_ARRAY_SIZE); 
+		// printf("A_prime: \n");
+		// // print_array(A_prime, STD_ARRAY_SIZE); 
+
 		long long P_residue = llabs(run_kk(A_prime));
 		long long P_prime_residue = llabs(run_kk(A_double_prime));
+
+		// printf("After KK: \n"); 
+		// printf("A_double_prime: \n");
+		// print_array(A_double_prime, STD_ARRAY_SIZE); 
+		// printf("Residue: %lld\n", P_residue);
+		// printf("A_prime: \n");
+		// print_array(A_prime, STD_ARRAY_SIZE); 
+		// printf("Residue: %lld\n", P_prime_residue);
+
 
 		if (P_prime_residue < P_residue) {
 			for (int j=0; j<STD_ARRAY_SIZE; j++) {
@@ -152,14 +167,16 @@ long long rr_prepartition (long long* A) {
 				A_prime[j] = A_double_prime[j];
 			}
 		}
+		//printf("FINAL A_PRIME: \n"); 
+		// print_array(A_prime, STD_ARRAY_SIZE);
 
 		free(P_prime);
 		free(A_double_prime);
 	}
 
 	long long final_P_residue = run_kk(A_prime);
-	free(A_prime);
-	free(P);
+	// free(A_prime);
+	// free(P);
 
 	return final_P_residue;
 }

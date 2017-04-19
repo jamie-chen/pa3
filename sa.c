@@ -326,7 +326,7 @@ int main (int argc, char *argv[]) {
 
 	// read the integers line by line
 	long long* A = malloc(sizeof(long long)*STD_ARRAY_SIZE);
-	char* temp_number = malloc(sizeof(char)*STD_NUM_BUFFER_SIZE);
+	char* temp_number = malloc(sizeof(char)*(STD_NUM_BUFFER_SIZE));
 	int counter = 0;
 
 	FILE* fp;

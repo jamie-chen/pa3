@@ -96,7 +96,9 @@ long long hc_standard (long long* A) {
 			S_prime[j] = S[j];
 		}
 
+		// print_array(S_prime, STD_ARRAY_SIZE); 
 		rand_move(S_prime);
+		// print_array(S_prime, STD_ARRAY_SIZE); 
 
 		// set S_prime to S if its residue is smaller
 		long long S_residue = llabs(residue_calculator(A, S));
@@ -129,9 +131,12 @@ void generate_random_solution_pp (long long* A, long long* P, long long* A_prime
 		A_prime[i] = 0;
 	}
 
+	// print_array(P, STD_ARRAY_SIZE);
 	for (int i=0; i<STD_ARRAY_SIZE; i++) {
 		A_prime[(P[i])] = A_prime[(P[i])] + A[i];
 	}
+	
+	// print_array(A_prime, STD_ARRAY_SIZE); 
 }
 
 
@@ -179,6 +184,10 @@ long long hc_prepartition (long long* A) {
 
 	generate_random_solution_pp(A, P, A_prime);
 
+	for (int i = 0; i < STD_ARRAY_SIZE; i++) {
+		A_prime[i] = 0; 
+	}
+
 	// then iterate MAX_ITER times while doing a random pp move and update if residue is smaller
 	for (int i=0; i<MAX_ITER; i++) {
 		
@@ -189,7 +198,13 @@ long long hc_prepartition (long long* A) {
 			P_prime[j] = P[j];
 		}
 
+		for (int k = 0; k<STD_ARRAY_SIZE; k++) {
+			A_double_prime[k] = 0; 
+		}
+
+		// print_array(P_prime,STD_ARRAY_SIZE);
 		rand_move_pp(P_prime);
+		// print_array(P_prime,STD_ARRAY_SIZE);
 		generate_A_prime(A, P_prime, A_double_prime);
 
 
@@ -208,6 +223,7 @@ long long hc_prepartition (long long* A) {
 		free(A_double_prime);
 	}
 
+	// print_array(A_prime, STD_ARRAY_SIZE); 
 	long long final_P_residue = llabs(run_kk(A_prime));
 	free(A_prime);
 	free(P);
@@ -221,19 +237,21 @@ long long hc_prepartition (long long* A) {
 
 
 int main (int argc, char *argv[]) {
+	
+	if (argc == 0) {
+		printf("ERROR");
+	}
 	// randomizing seed
 	srand((unsigned) time(NULL));
 
 	// parse the command line arguments
 	char inputfile[0x100]; 
 	sprintf(inputfile, "100_random_instances/%d.txt", atoi(argv[1]));
-	int kk_residue = atoi(argv[2]);
 
 
 	// read the integers line by line
 	long long* A = malloc(sizeof(long long)*STD_ARRAY_SIZE);
 	char* temp_number = malloc(sizeof(char)*STD_NUM_BUFFER_SIZE);
-	int counter = 0;
 
 	FILE* fp;
 	fp = fopen(inputfile, "r");
@@ -257,8 +275,8 @@ int main (int argc, char *argv[]) {
 	printf("The residue after Hill Climbing in standard representation is: %lld\n", hc_standard_residue);
 	printf("The residue after Hill Climbing in prepartition representation is: %lld\n", hc_prepartition_residue);
 
-	//free(temp_number);
-	//free(A);
+	free(temp_number);
+	free(A);
 	fclose(fp);
 }
 

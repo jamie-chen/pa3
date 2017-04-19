@@ -97,7 +97,7 @@ long long rr_standard (long long* A) {
 
 void generate_random_solution_pp (long long* A, long long* P, long long* A_prime) {
 	for (int i=0; i<STD_ARRAY_SIZE; i++) {
-		P[i] = rand_num(STD_ARRAY_SIZE);
+		P[i] = rand_num((STD_ARRAY_SIZE-1));
 		A_prime[i] = 0;
 	}
 
@@ -177,7 +177,7 @@ int main (int argc, char *argv[]) {
 
 	// read the integers line by line
 	long long* A = malloc(sizeof(long long)*STD_ARRAY_SIZE);
-	char* temp_number = malloc(sizeof(char)*(STD_NUM_BUFFER_SIZE+1));
+	char* temp_number = malloc(sizeof(char)*(STD_NUM_BUFFER_SIZE));
 	int counter = 0;
 
 	FILE* fp;

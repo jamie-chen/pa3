@@ -49,7 +49,11 @@ int main () {
 
 		// run the Karmarkar-Karp algorithm
 		printf("Running KK Algorithm...\n");
+		clock_t kk_start, kk_end;
+		kk_start = clock();
 		system(kk_command);
+		kk_end = clock();
+		printf("Running KK took %f\n", (((double) (kk_end - kk_start)) / CLOCKS_PER_SEC));
 		printf("... Finished KK Algorithm\n\n");
 
 

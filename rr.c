@@ -143,11 +143,11 @@ long long rr_prepartition (long long* A) {
 
 		generate_random_solution_pp(A, P_prime, A_double_prime);
 
-		// printf("---------TRIAL %d-----------\n", i); 
-		// printf("A_double_prime: \n");
-		// // print_array(A_double_prime, STD_ARRAY_SIZE); 
-		// printf("A_prime: \n");
-		// // print_array(A_prime, STD_ARRAY_SIZE); 
+		//printf("---------TRIAL %d-----------\n", i); 
+		//printf("A_double_prime: \n");
+		//print_array(A_double_prime, STD_ARRAY_SIZE); 
+		//printf("A_prime: \n");
+		//print_array(A_prime, STD_ARRAY_SIZE); 
 
 		long long P_residue = llabs(run_kk(A_prime));
 		long long P_prime_residue = llabs(run_kk(A_double_prime));
@@ -155,11 +155,13 @@ long long rr_prepartition (long long* A) {
 		// printf("After KK: \n"); 
 		// printf("A_double_prime: \n");
 		// print_array(A_double_prime, STD_ARRAY_SIZE); 
-		// printf("Residue: %lld\n", P_residue);
+		//printf("P_Residue: %lld\n", P_residue);
 		// printf("A_prime: \n");
 		// print_array(A_prime, STD_ARRAY_SIZE); 
-		// printf("Residue: %lld\n", P_prime_residue);
+		//printf("P_prime_Residue: %lld\n", P_prime_residue);
 
+
+		//printf("------------------------------\n");
 
 		if (P_prime_residue < P_residue) {
 			for (int j=0; j<STD_ARRAY_SIZE; j++) {
@@ -216,11 +218,25 @@ int main (int argc, char *argv[]) {
 	// 	exit(0);
 	// }
 
+    clock_t standard_start, standard_end;
+	standard_start = clock();
 	long long rr_standard_residue = rr_standard(A);
+	standard_end = clock();
+
+
+	clock_t prepartition_start, prepartition_end;
+	prepartition_start = clock();
 	long long rr_prepartition_residue = rr_prepartition(A);
+	prepartition_end = clock();
+	
 	
 	printf("The residue after Repeated Random in standard representation is: %lld\n", rr_standard_residue);
+	printf("Running Standard took %f\n", (((double) (standard_end - standard_start)) / CLOCKS_PER_SEC));
+
+
 	printf("The residue after Repeated Random in prepartition representation is: %lld\n", rr_prepartition_residue);
+	printf("Running Prepartition took %f\n", (((double) (prepartition_end - prepartition_start)) / CLOCKS_PER_SEC));
+
 
 	free(temp_number);
 	free(A);

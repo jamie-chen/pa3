@@ -267,13 +267,27 @@ int main (int argc, char *argv[]) {
         fgets(temp_number, STD_NUM_BUFFER_SIZE, fp);
         A[i] = atoll(temp_number);
     }
+
+
+    clock_t standard_start, standard_end;
+	standard_start = clock();
+	long long hc_standard_residue = hc_standard(A);
+	standard_end = clock();
+
+
+	clock_t prepartition_start, prepartition_end;
+	prepartition_start = clock();
+	long long hc_prepartition_residue = hc_prepartition(A);
+	prepartition_end = clock();
+
 	
 
-	long long hc_standard_residue = hc_standard(A);
-	long long hc_prepartition_residue = hc_prepartition(A);
-
 	printf("The residue after Hill Climbing in standard representation is: %lld\n", hc_standard_residue);
+	printf("Running Standard took %f\n", (((double) (standard_end - standard_start)) / CLOCKS_PER_SEC));
+
 	printf("The residue after Hill Climbing in prepartition representation is: %lld\n", hc_prepartition_residue);
+	printf("Running Prepartition took %f\n", (((double) (prepartition_end - prepartition_start)) / CLOCKS_PER_SEC));
+
 
 	free(temp_number);
 	free(A);

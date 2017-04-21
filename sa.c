@@ -343,15 +343,28 @@ int main (int argc, char *argv[]) {
         fgets(temp_number, STD_NUM_BUFFER_SIZE, fp);
         A[i] = atoll(temp_number);
     }
+
+
+
+    clock_t standard_start, standard_end;
+	standard_start = clock();
+	long long sa_standard_residue = sa_standard(A);
+	standard_end = clock();
+
+
+	clock_t prepartition_start, prepartition_end;
+	prepartition_start = clock();
+	long long sa_prepartition_residue = sa_prepartition(A);
+	prepartition_end = clock();
 	
 
 
-	long long sa_standard_residue = sa_standard(A);
-	long long sa_prepartition_residue = sa_prepartition(A);
-
-
 	printf("The residue after Simulated Annealing in standard representation is: %lld\n", sa_standard_residue);
+	printf("Running Standard took %f\n", (((double) (standard_end - standard_start)) / CLOCKS_PER_SEC));
+	
+
 	printf("The residue after Simulated Annealing in prepartition representation is: %lld\n", sa_prepartition_residue);
+	printf("Running Prepartition took %f\n", (((double) (prepartition_end - prepartition_start)) / CLOCKS_PER_SEC));
 
 	//free(temp_number);
 	//free(A);
